@@ -4,10 +4,10 @@ Routes and views for the flask application.
 
 from datetime import datetime
 from flask import render_template
-from deadline import app
+from app import deadline_app
 
-@app.route('/')
-@app.route('/home')
+@deadline_app.route('/')
+@deadline_app.route('/home')
 def home():
     """Renders the home page."""
     return render_template(

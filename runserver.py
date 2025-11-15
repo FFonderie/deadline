@@ -3,7 +3,7 @@ This script runs the deadline application using a development server.
 """
 
 from os import environ
-from deadline import app
+from app import deadline_app
 
 if __name__ == '__main__':
     HOST = environ.get('SERVER_HOST', 'localhost')
@@ -11,4 +11,4 @@ if __name__ == '__main__':
         PORT = int(environ.get('SERVER_PORT', '5555'))
     except ValueError:
         PORT = 5555
-    app.run(HOST, PORT)
+    deadline_app.run(HOST, PORT)

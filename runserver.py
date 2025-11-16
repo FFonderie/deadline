@@ -3,7 +3,9 @@ This script runs the deadline application using a development server.
 """
 
 from os import environ
-from app import deadline_app
+from app import create_app
+
+deadline_app = create_app()
 
 if __name__ == '__main__':
     HOST = environ.get('SERVER_HOST', 'localhost')

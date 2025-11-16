@@ -2,19 +2,17 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{{ title }} - Homepage</title>
+
+        <!--import the style sheet from static (otherwise server cant find it)-->
+        <link rel="stylesheet" href="/static/content/style.css"/>
     </head>
 
     <body>
-
-        <div class="container body-content">
-            <h1>HELLO WORLD</h1>
-            <hr />
-            <footer>
-                <p>&copy; {{ year }} - My Flask Application</p>
-            </footer>
+        <!--this is the main content-->
+        <div>
+            <h1 class="index-hello">HELLO WORLD</h1>
+            <p> {{ year }} - My Flask Application</p>
         </div>
-
     </body>
 </html>

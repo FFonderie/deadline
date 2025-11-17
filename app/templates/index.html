@@ -1,18 +1,9 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{{ title }} - Homepage</title>
+{% extends "layout.html" %}
 
-        <!--import the style sheet from static (otherwise server cant find it)-->
-        <link rel="stylesheet" href="/static/content/style.css"/>
-    </head>
+{% block content %}
 
-    <body>
-        <!--this is the main content-->
-        <div>
-            <h1 class="index-hello">HELLO WORLD</h1>
-            <p> {{ year }} - My Flask Application</p>
-        </div>
-    </body>
-</html>
+<!--this is the main content-->
+<h1>HOME</h1>
+<p> {{ year }} - Flask Application</p>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<!--this is the general format of all pages-->
+<head>
+    <meta charset="UTF-8">
+    <title> {{title}} </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!--import the style sheet from static (otherwise server cant find it)-->
+    <link rel="stylesheet" href="/static/content/style.css" />
+</head>
+
+<body>
+    <!--top navigation bar-->
+    <nav>
+        <div class="wrapper">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/timeline">TimeLine</a></li>
+                <li><a href="/deadlines">DeadLines</a></li>
+                <li><a href="/classes">Classes</a></li>
+                <li><a href="/login">Sign In</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="wrapper">
+        <!--content of another page extending this-->
+        {% block content %}
+        {% endblock %}
+    </div>
+    
+</body>
+</html>

@@ -1,20 +1,9 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{{ title }} - Homepage</title>
-    </head>
+{% extends "layout.html" %}
 
-    <body>
+{% block content %}
 
-        <div class="container body-content">
-            <h1>HELLO WORLD</h1>
-            <hr />
-            <footer>
-                <p>&copy; {{ year }} - My Flask Application</p>
-            </footer>
-        </div>
+<!--this is the main content-->
+<h1>HOME</h1>
+<p> {{ year }} - Flask Application</p>
 
-    </body>
-</html>
+{% endblock %}

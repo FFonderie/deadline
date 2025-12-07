@@ -4,30 +4,64 @@
 <head>
     <meta charset="UTF-8">
     <title> {{title}} </title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!--import the style sheet from static (otherwise server cant find it)-->
     <link rel="stylesheet" href="/static/content/style.css" />
+
+    <!--set up a Content Delivery Network so that I don't have to have javascript files-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
 
 <body>
-    <!--top navigation bar-->
-    <nav>
-        <div class="wrapper">
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/timeline">TimeLine</a></li>
-                <li><a href="/deadlines">DeadLines</a></li>
-                <li><a href="/classes">Classes</a></li>
-                <li><a href="/login">Sign In</a></li>
-            </ul>
+    <!--navbar-->
+    <nav class="navbar navbar-expand-md navbar-light">
+        <div class="container-xxl">
+            <a href="/" class="navbar-brand">
+                <span class="fw-bold text-secondary">
+                    DeadLine
+                </span>
+            </a>
+
+            <!--toggle button for mobile nav-->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!--navbar links-->
+            <div class="collapse navbar-collapse justify-content-end align-center" id="main-nav">
+                <ul class="navbar-nav">
+                    <!--TimeLine Link-->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/timeline">TimeLine</a>
+                    </li>
+                    <!--DeadLine Link-->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/deadlines">DeadLines</a>
+                    </li>
+                    <!--Classes Link-->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/classes">My Classes</a>
+                    </li>
+                    <!--Sign In Link-->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Sign In</a>
+                    </li>
+                </ul>
+
+
+            </div>
+
         </div>
     </nav>
-    <div class="wrapper">
+    
+    <div>
         <!--content of another page extending this-->
         {% block content %}
         {% endblock %}
     </div>
-    
+
+    <!--set up a Content Delivery Network so that I don't have to have javascript files-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 </html>

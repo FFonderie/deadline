@@ -3,10 +3,15 @@ Routes and views for the flask application.
 """
 
 from datetime import datetime
-from flask import render_template
-# from app import deadline_app
+
+from flask import render_template, redirect, url_for, flash, request
 from flask import current_app as deadline_app
-from app.forms import LoginForm
+from flask_login import login_user, logout_user, login_required, current_user
+
+from app.forms import LoginForm, RegistrationForm, AssignmentForm
+from app.models import User, Assignment
+from app import db
+
 
 @deadline_app.route('/')
 def home():
@@ -17,15 +22,6 @@ def home():
         year=datetime.now().year,
     )
 
-@deadline_app.route('/login')
-def login():
-    """renders a login page"""
-    form = LoginForm()
-    return render_template(
-        'login.html',
-        title='Login',
-        form = form
-    )
 
 @deadline_app.route('/timeline')
 def timeline():
@@ -35,6 +31,7 @@ def timeline():
         title='TimeLine',
     )
 
+
 @deadline_app.route('/classes')
 def classes():
     """renders a classes page"""
@@ -43,6 +40,7 @@ def classes():
         title='Classes',
     )
 
+
 @deadline_app.route('/deadlines')
 def deadlines():
     """renders a deadlines page"""
@@ -50,3 +48,113 @@ def deadlines():
         'deadlines.html',
         title='DeadLines',
     )
+
+
+# ---------- AUTH ROUTES ----------
+
+@deadline_app.route('/login', methods=['GET', 'POST'])
+def login():
+    """Login page with form + logic"""
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is None or not user.check_password(form.password.data):
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+        login_user(user, remember=form.remember_me.data)
+        next_page = request.args.get('next')
+        return redirect(next_page or url_for('home'))
+
+    return render_template('login.html', title='Sign In', form=form)
+
+
+@deadline_app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+
+@deadline_app.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(
+            username=form.username.data,
+            email=form.email.data
+        )
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Congratulations, you are now a registered user!')
+        return redirect(url_for('login'))
+
+    return render_template('register.html', title='Register', form=form)
+
+
+# ---------- ASSIGNMENT ROUTES (CRUD) ----------
+
+@deadline_app.route('/assignments', methods=['GET', 'POST'])
+@login_required
+def assignments():
+    form = AssignmentForm()
+    if form.validate_on_submit():
+        assignment = Assignment(
+            title=form.title.data,
+            description=form.description.data,
+            due_date=form.due_date.data,
+            user=current_user
+        )
+        db.session.add(assignment)
+        db.session.commit()
+        flash('Assignment created!')
+        return redirect(url_for('assignments'))
+
+    # READ: show all assignments for this user
+    assignments_list = Assignment.query.filter_by(user_id=current_user.id).all()
+    return render_template(
+        'assignments.html',
+        title='Assignments',
+        form=form,
+        assignments=assignments_list
+    )
+
+
+@deadline_app.route('/assignments/<int:id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_assignment(id):
+    assignment = Assignment.query.get_or_404(id)
+    if assignment.user_id != current_user.id:
+        flash('Not authorized.')
+        return redirect(url_for('assignments'))
+
+    form = AssignmentForm(obj=assignment)
+    if form.validate_on_submit():
+        assignment.title = form.title.data
+        assignment.description = form.description.data
+        assignment.due_date = form.due_date.data
+        db.session.commit()
+        flash('Assignment updated!')
+        return redirect(url_for('assignments'))
+
+    return render_template('edit_assignment.html', title='Edit Assignment', form=form)
+
+
+@deadline_app.route('/assignments/<int:id>/delete', methods=['POST'])
+@login_required
+def delete_assignment(id):
+    assignment = Assignment.query.get_or_404(id)
+    if assignment.user_id != current_user.id:
+        flash('Not authorized.')
+        return redirect(url_for('assignments'))
+
+    db.session.delete(assignment)
+    db.session.commit()
+    flash('Assignment deleted.')
+    return redirect(url_for('assignments'))

@@ -1,3 +1,20 @@
+.horizontal-scroll-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.horizontal-scroll-container .item
+{
+    display: inline-block;
+
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+}
+
+
 /* not sure what is necessary in bootstrap yet */
 /*
 

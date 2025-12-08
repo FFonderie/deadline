@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container">
+    <h1>Asignments</h1>
+    <p>
+        Should only be accessible in the context of a class
+    </p>
+    <p>
+        If the user is a student, they should see all assignments for this class.
+        If the user is a teacher, they should see all of their assignments for this class.
+    </p>
+</div>
+<section id="assignmentsList" class="bg-light">
+    <div class="container-lg">
+        <div class="text-center">
+            <h2>Your Assignments</h2>
+            <p class="lead">Assignments you have made or have due</p>
+        </div>
+        <ul class="list-group">
+            <li class="list-group-item">Assignment</li>
+            <li class="list-group-item">Assignment</li>
+            <li class="list-group-item">Assignment</li>
+            <li class="list-group-item">Assignment</li>
+            <li class="list-group-item">Assignment</li>
+        </ul>
+
+    </div>
+    <div class="row">
+        <div class="col">
+
+        </div>
+    </div>
+</section>
+<section id="createAssignment">
+    <div class="container-lg">
+        <div class="text-center">
+            <h2>Create Assignment</h2>
+            <p class="lead">makes an assignments for this class</p>
+        </div>
+
+        <div class="row justify-content-center my-5">
+            <div class="col-lg-6">
+                <form method="post">
+                    {{ form.hidden_tag() }}
+
+                    <p class="lead">
+                        {{ form.title.label }}<br>
+                        {{ form.title(size=32) }}
+                        {% for error in form.title.errors %}
+                        <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </p>
+
+                    <p class="lead">
+                        {{ form.description.label }}<br>
+                        {{ form.description(size=32) }}
+                        {% for error in form.description.errors %}
+                        <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </p>
+
+                    <p class="lead">
+                        {{ form.due_date.label }}<br>
+                        {{ form.due_date(size=32) }}
+                        {% for error in form.due_date.errors %}
+                        <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </p>
+
+                    <p class="lead">{{ form.submit() }}</p>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

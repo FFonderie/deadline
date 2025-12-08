@@ -10,170 +10,81 @@
         </p>
 </div>
 
-
 <section id="timeLineList" class="bg-light">
     <div class="container-lg">
         <div class="text-center">
             <h2>Upcoming Assignments</h2>
             <p class="lead">what is due soon...</p>
         </div>
-
     </div>
+
     <div class="container">
         <div class="row">
             <div class="col">
                 <div class="horizontal-scroll-container">
 
-                    <div class="item card border-primary border-2">
-                        <div class="card-header text-center text-primary">Due Today!</div>
-                        <div class="card-body text-center py-4">
-                            <h4 class="card-title">Assignment Title</h4>
-                            <p class="lead card-subtitle">Due 12/31/2099 at 11:59PM</p>
-                            <div class="d-grid gap-2">
-                                <div class="btn-group-vertical py-4">
-                                    <a href="#" class="btn btn-primary">Go to Class</a>
-                                    <a href="#" class="btn btn-primary">Go to Assignment</a>
+                    {% if assignments %}
+                        {% for assignment in assignments %}
+                            {% if loop.first %}
+                                <!-- first card: highlighted "Due Today!" style -->
+                                <div class="item card border-primary border-2">
+                                    <div class="card-header text-center text-primary">
+                                        Due Soon!
+                                    </div>
+                                    <div class="card-body text-center py-4">
+                                        <h4 class="card-title">{{ assignment.title }}</h4>
+                                        <p class="lead card-subtitle">
+                                            Due {{ assignment.due_date.strftime('%m/%d/%Y at %I:%M%p') }}
+                                        </p>
+                                        <div class="d-grid gap-2">
+                                            <div class="btn-group-vertical py-4">
+                                                <a href="#" class="btn btn-primary">Go to Class</a>
+                                                <a href="#" class="btn btn-primary">Go to Assignment</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <!-- other cards: same look as your original plain cards -->
+                                <div class="item card border-0">
+                                    <div class="card-body text-center py-4">
+                                        <h4 class="card-title">{{ assignment.title }}</h4>
+                                        <p class="lead card-subtitle">
+                                            Due {{ assignment.due_date.strftime('%m/%d/%Y at %I:%M%p') }}
+                                        </p>
+                                        <div class="d-grid gap-2">
+                                            <div class="btn-group-vertical py-4">
+                                                <a href="#" class="btn btn-primary">Go to Class</a>
+                                                <a href="#" class="btn btn-primary">Go to Assignment</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <!-- fallback when there are no assignments -->
+                        <div class="item card border-0">
+                            <div class="card-body text-center py-4">
+                                <h4 class="card-title">No assignments yet</h4>
+                                <p class="lead card-subtitle">
+                                    Add an assignment to see it appear in your timeline.
+                                </p>
+                                <div class="d-grid gap-2">
+                                    <div class="btn-group-vertical py-4">
+                                        <a href="{{ url_for('assignments') }}" class="btn btn-primary">
+                                            Go to Assignments
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="item card border-0">
-                        <div class="card-body text-center py-4">
-                            <h4 class="card-title">Assignment Title</h4>
-                            <p class="lead card-subtitle">Due 12/31/2099 at 11:59PM</p>
-                            <div class="d-grid gap-2">
-                                <div class="btn-group-vertical py-4">
-                                    <a href="#" class="btn btn-primary">Go to Class</a>
-                                    <a href="#" class="btn btn-primary">Go to Assignment</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="item card border-0">
-                        <div class="card-body text-center py-4">
-                            <h4 class="card-title">Assignment Title</h4>
-                            <p class="lead card-subtitle">Due 12/31/2099 at 11:59PM</p>
-                            <div class="d-grid gap-2">
-                                <div class="btn-group-vertical py-4">
-                                    <a href="#" class="btn btn-primary">Go to Class</a>
-                                    <a href="#" class="btn btn-primary">Go to Assignment</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="item card border-0">
-                        <div class="card-body text-center py-4">
-                            <h4 class="card-title">Assignment Title</h4>
-                            <p class="lead card-subtitle">Due 12/31/2099 at 11:59PM</p>
-                            <div class="d-grid gap-2">
-                                <div class="btn-group-vertical py-4">
-                                    <a href="#" class="btn btn-primary">Go to Class</a>
-                                    <a href="#" class="btn btn-primary">Go to Assignment</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="item card border-0">
-                        <div class="card-body text-center py-4">
-                            <h4 class="card-title">Assignment Title</h4>
-                            <p class="lead card-subtitle">Due 12/31/2099 at 11:59PM</p>
-                            <div class="d-grid gap-2">
-                                <div class="btn-group-vertical py-4">
-                                    <a href="#" class="btn btn-primary">Go to Class</a>
-                                    <a href="#" class="btn btn-primary">Go to Assignment</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="item card border-0">
-                        <div class="card-body text-center py-4">
-                            <h4 class="card-title">Assignment Title</h4>
-                            <p class="lead card-subtitle">Due 12/31/2099 at 11:59PM</p>
-                            <div class="d-grid gap-2">
-                                <div class="btn-group-vertical py-4">
-                                    <a href="#" class="btn btn-primary">Go to Class</a>
-                                    <a href="#" class="btn btn-primary">Go to Assignment</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="item card border-0">
-                        <div class="card-body text-center py-4">
-                            <h4 class="card-title">Assignment Title</h4>
-                            <p class="lead card-subtitle">Due 12/31/2099 at 11:59PM</p>
-                            <div class="d-grid gap-2">
-                                <div class="btn-group-vertical py-4">
-                                    <a href="#" class="btn btn-primary">Go to Class</a>
-                                    <a href="#" class="btn btn-primary">Go to Assignment</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="item card border-0">
-                        <div class="card-body text-center py-4">
-                            <h4 class="card-title">Assignment Title</h4>
-                            <p class="lead card-subtitle">Due 12/31/2099 at 11:59PM</p>
-                            <div class="d-grid gap-2">
-                                <div class="btn-group-vertical py-4">
-                                    <a href="#" class="btn btn-primary">Go to Class</a>
-                                    <a href="#" class="btn btn-primary">Go to Assignment</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="item card border-0">
-                        <div class="card-body text-center py-4">
-                            <h4 class="card-title">Assignment Title</h4>
-                            <p class="lead card-subtitle">Due 12/31/2099 at 11:59PM</p>
-                            <div class="d-grid gap-2">
-                                <div class="btn-group-vertical py-4">
-                                    <a href="#" class="btn btn-primary">Go to Class</a>
-                                    <a href="#" class="btn btn-primary">Go to Assignment</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="item card border-0">
-                        <div class="card-body text-center py-4">
-                            <h4 class="card-title">Assignment Title</h4>
-                            <p class="lead card-subtitle">Due 12/31/2099 at 11:59PM</p>
-                            <div class="d-grid gap-2">
-                                <div class="btn-group-vertical py-4">
-                                    <a href="#" class="btn btn-primary">Go to Class</a>
-                                    <a href="#" class="btn btn-primary">Go to Assignment</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="item card border-0">
-                        <div class="card-body text-center py-4">
-                            <h4 class="card-title">Assignment Title</h4>
-                            <p class="lead card-subtitle">Due 12/31/2099 at 11:59PM</p>
-                            <div class="d-grid gap-2">
-                                <div class="btn-group-vertical py-4">
-                                    <a href="#" class="btn btn-primary">Go to Class</a>
-                                    <a href="#" class="btn btn-primary">Go to Assignment</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {% endif %}
 
                 </div>
             </div>
         </div>
     </div>
-    
 </section>
-
 
 {% endblock %}

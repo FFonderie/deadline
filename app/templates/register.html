@@ -1,45 +1,56 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <h1>Register</h1>
 
-  <form method="post">
-    {{ form.hidden_tag() }}
+<section id="register">
+    <div class="container-lg">
+        <div class="text-center">
+            <h2>Register</h2>
+            <p class="lead">do not put important data in, we cannot guarentee its safety</p>
+        </div>
 
-    <p>
-      {{ form.username.label }}<br>
-      {{ form.username(size=32) }}
-      {% for error in form.username.errors %}
-        <span class="error">{{ error }}</span>
-      {% endfor %}
-    </p>
+        <div class="row justify-content-center my-5">
+            <div class="col-lg-6">
+                <form method="post">
+                    {{ form.hidden_tag() }}
 
-    <p>
-      {{ form.email.label }}<br>
-      {{ form.email(size=32) }}
-      {% for error in form.email.errors %}
-        <span class="error">{{ error }}</span>
-      {% endfor %}
-    </p>
+                    <p class="lead">
+                        {{ form.username.label }}<br>
+                        {{ form.username(size=32) }}
+                        {% for error in form.username.errors %}
+                        <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </p>
 
-    <p>
-      {{ form.password.label }}<br>
-      {{ form.password(size=32) }}
-      {% for error in form.password.errors %}
-        <span class="error">{{ error }}</span>
-      {% endfor %}
-    </p>
+                    <p class="lead">
+                        {{ form.email.label }}<br>
+                        {{ form.email(size=32) }}
+                        {% for error in form.email.errors %}
+                        <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </p>
 
-    <p>
-      {{ form.password2.label }}<br>
-      {{ form.password2(size=32) }}
-      {% for error in form.password2.errors %}
-        <span class="error">{{ error }}</span>
-      {% endfor %}
-    </p>
+                    <p class="lead">
+                        {{ form.password.label }}<br>
+                        {{ form.password(size=32) }}
+                        {% for error in form.password.errors %}
+                        <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </p>
 
-    <p>{{ form.submit() }}</p>
-  </form>
+                    <p class="lead">
+                        {{ form.password2.label }}<br>
+                        {{ form.password2(size=32) }}
+                        {% for error in form.password2.errors %}
+                        <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </p>
 
-    <hr>
+                    <p class="lead">{{ form.submit() }}</p>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
 {% endblock %}

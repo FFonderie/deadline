@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 import pytest
 from flask import Flask
 
-# --- Make sure project root is on sys.path so we can import app.models ---
+# Make sure we can import the app files
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
@@ -14,14 +14,9 @@ from app import db
 from app.models import User, Assignment
 
 
-# ---------- FIXTURE: minimal Flask app + in-memory DB ----------
-
+# This sets up a tiny test version of the app and an empty database
 @pytest.fixture
 def app():
-    """
-    Create a minimal Flask app just for testing models + DB.
-    We don't rely on the real app instance here.
-    """
     app = Flask(__name__)
     app.config.update(
         TESTING=True,
@@ -39,19 +34,19 @@ def app():
         db.drop_all()
 
 
+# This lets us use the database in the tests
 @pytest.fixture
 def session(app):
-    """Shortcut to the DB session inside an app context."""
     return db.session
 
 
-# ---------- TESTS (map to MVP bullets) ----------
+
+# ---------- TESTS ----------
 
 def test_user_password_hashing_and_storage(app, session):
     """
-    MVP:
-    - User can create an account (username + password)
-    - App stores user accounts in a local database
+    Test that a user can be created,
+    saved in the database, and their password works.
     """
     u = User(username="alice", email="alice@example.com")
     u.set_password("supersecret")
@@ -60,6 +55,8 @@ def test_user_password_hashing_and_storage(app, session):
     session.commit()
 
     user = User.query.filter_by(username="alice").first()
+
+    # basic checks
     assert user is not None
     assert user.email == "alice@example.com"
     assert user.check_password("supersecret")
@@ -68,9 +65,7 @@ def test_user_password_hashing_and_storage(app, session):
 
 def test_second_user_is_independent(app, session):
     """
-    Extra coverage for account creation & uniqueness.
-    Still supports:
-    - User accounts stored correctly & independently.
+    Test that two users can be saved separately.
     """
     u1 = User(username="alice", email="alice@example.com")
     u1.set_password("p1")
@@ -83,7 +78,8 @@ def test_second_user_is_independent(app, session):
     alice = User.query.filter_by(username="alice").first()
     bob = User.query.filter_by(username="bob").first()
 
-    assert alice is not None and bob is not None
+    assert alice is not None
+    assert bob is not None
     assert alice.id != bob.id
     assert alice.check_password("p1")
     assert bob.check_password("p2")
@@ -91,9 +87,8 @@ def test_second_user_is_independent(app, session):
 
 def test_assignment_creation_and_link_to_user(app, session):
     """
-    MVP:
-    - Users can add assignments in the database
-    - App saves assignments in the database
+    Test that an assignment can be created
+    and is connected to the right user.
     """
     user = User(username="bob", email="bob@example.com")
     user.set_password("password123")
@@ -120,9 +115,7 @@ def test_assignment_creation_and_link_to_user(app, session):
 
 def test_assignments_ordered_by_due_date(app, session):
     """
-    MVP:
-    - Dashboard shows all user’s assignments in chronological order
-    (simulated here by ordering query on due_date).
+    Test that assignments can be sorted by due date.
     """
     user = User(username="charlie", email="charlie@example.com")
     user.set_password("pw")
@@ -158,9 +151,8 @@ def test_assignments_ordered_by_due_date(app, session):
 
 def test_assignments_can_be_updated(app, session):
     """
-    MVP:
-    - Users can edit assignments.
-    (Here we simulate editing title/description in the DB.)
+    Test that an assignment's title or description
+    can be changed and saved.
     """
     user = User(username="dana", email="dana@example.com")
     user.set_password("pw")
@@ -177,7 +169,7 @@ def test_assignments_can_be_updated(app, session):
     session.add(assignment)
     session.commit()
 
-    # simulate editing
+    # change the assignment
     assignment.title = "Final HW"
     assignment.description = "Updated description"
     session.commit()
@@ -189,9 +181,7 @@ def test_assignments_can_be_updated(app, session):
 
 def test_assignments_can_be_deleted(app, session):
     """
-    MVP:
-    - Users can delete assignments.
-    (We simulate deletion in the DB.)
+    Test that an assignment can be deleted.
     """
     user = User(username="eric", email="eric@example.com")
     user.set_password("pw")
@@ -208,6 +198,7 @@ def test_assignments_can_be_deleted(app, session):
     session.add(assignment)
     session.commit()
 
+    # delete it
     session.delete(assignment)
     session.commit()
 
@@ -217,9 +208,8 @@ def test_assignments_can_be_deleted(app, session):
 
 def test_urgent_assignments_within_two_days(app, session):
     """
-    MVP:
-    - App highlights urgent assignments (due within 2 days).
-    Here we simulate 'urgent' as due_date within next 2 days.
+    Test that assignments due soon (within 2 days)
+    can be found.
     """
     user = User(username="fiona", email="fiona@example.com")
     user.set_password("pw")
@@ -260,8 +250,8 @@ def test_urgent_assignments_within_two_days(app, session):
 
 def test_non_urgent_assignments_excluded_from_urgent_query(app, session):
     """
-    Extra coverage for urgent filter logic:
-    Checks that far future assignments are not considered urgent.
+    Test that assignments far in the future
+    are NOT counted as urgent.
     """
     user = User(username="gina", email="gina@example.com")
     user.set_password("pw")

@@ -24,61 +24,96 @@
                 <div class="horizontal-scroll-container">
 
                     {% if assignments %}
-                        {% for assignment in assignments %}
-                            {% if loop.first %}
-                                <!-- first card: highlighted "Due Today!" style -->
-                                <div class="item card border-primary border-2">
-                                    <div class="card-header text-center text-primary">
-                                        Due Soon!
-                                    </div>
-                                    <div class="card-body text-center py-4">
-                                        <h4 class="card-title">{{ assignment.title }}</h4>
-                                        <p class="lead card-subtitle">
-                                            Due {{ assignment.due_date.strftime('%m/%d/%Y at %I:%M%p') }}
-                                        </p>
-                                        <div class="d-grid gap-2">
-                                            <div class="btn-group-vertical py-4">
-                                                <a href="#" class="btn btn-primary">Go to Class</a>
-                                                <a href="#" class="btn btn-primary">Go to Assignment</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% else %}
-                                <!-- other cards: same look as your original plain cards -->
-                                <div class="item card border-0">
-                                    <div class="card-body text-center py-4">
-                                        <h4 class="card-title">{{ assignment.title }}</h4>
-                                        <p class="lead card-subtitle">
-                                            Due {{ assignment.due_date.strftime('%m/%d/%Y at %I:%M%p') }}
-                                        </p>
-                                        <div class="d-grid gap-2">
-                                            <div class="btn-group-vertical py-4">
-                                                <a href="#" class="btn btn-primary">Go to Class</a>
-                                                <a href="#" class="btn btn-primary">Go to Assignment</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        <!-- fallback when there are no assignments -->
-                        <div class="item card border-0">
-                            <div class="card-body text-center py-4">
-                                <h4 class="card-title">No assignments yet</h4>
-                                <p class="lead card-subtitle">
-                                    Add an assignment to see it appear in your timeline.
-                                </p>
-                                <div class="d-grid gap-2">
-                                    <div class="btn-group-vertical py-4">
-                                        <a href="{{ url_for('assignments') }}" class="btn btn-primary">
-                                            Go to Assignments
-                                        </a>
-                                    </div>
+                    {% for assignment in assignments %}
+
+                    {% set secondsLeft = (assignment.due_date - now).total_seconds() | int %}
+                    {% set daysLeft = (secondsLeft/86400) | int %}
+                    {% set onlyHoursLeft = (secondsLeft/3600) | int %}
+                    {% set onlyMinutesLeft = ((secondsLeft/60)%60) | int %}
+
+
+                    {% if secondsLeft < 0 %}
+                    <!-- overdue assignments -->
+                    <div class="item card border-danger border-2">
+                        <div class="card-header text-center text-danger">
+                            Overdue!
+                        </div>
+                        <div class="card-body text-center py-4">
+                            <h4 class="card-title">{{ assignment.title }}</h4>
+                            <p class="lead card-subtitle">
+                                Due {{ assignment.due_date.strftime('%m/%d/%Y at %I:%M%p') }}
+                            </p>
+                            <p class="lead card-subtitle">
+                                {{ -1 * daysLeft }} days ago
+                            </p>
+                            <div class="d-grid gap-2">
+                                <div class="btn-group-vertical py-4">
+                                    <a href="#" class="btn btn-danger">Go to Class</a>
+                                    <a href="#" class="btn btn-danger">Go to Assignment</a>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    {% elif daysLeft < 1 %}
+                    <!-- due in 1 day-->
+                    <div class="item card border-warning border-2">
+                        <div class="card-header text-center text-warning">
+                            Due Soon!
+                        </div>
+                        <div class="card-body text-center py-4">
+                            <h4 class="card-title">{{ assignment.title }}</h4>
+                            <p class="lead card-subtitle">
+                                Due {{ assignment.due_date.strftime('%m/%d/%Y at %I:%M%p') }}
+                            </p>
+                            <p class="lead card-subtitle">
+                                in {{ onlyHoursLeft }} hours and {{ onlyMinutesLeft }} minutes
+                            </p>
+                            <div class="d-grid gap-2">
+                                <div class="btn-group-vertical py-4">
+                                    <a href="#" class="btn btn-warning">Go to Class</a>
+                                    <a href="#" class="btn btn-warning">Go to Assignment</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <!-- normal assignments -->
+                    <div class="item card border-0">
+                        <div class="card-body text-center py-4">
+                            <h4 class="card-title">{{ assignment.title }}</h4>
+                            <p class="lead card-subtitle">
+                                Due {{ assignment.due_date.strftime('%m/%d/%Y at %I:%M%p') }}
+                            </p>
+                            <p class="lead card-subtitle">
+                                {{ daysLeft }} days from now
+                            </p>
+                            <div class="d-grid gap-2">
+                                <div class="btn-group-vertical py-4">
+                                    <a href="#" class="btn btn-primary">Go to Class</a>
+                                    <a href="#" class="btn btn-primary">Go to Assignment</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    {% else %}
+                    <!-- fallback when there are no assignments -->
+                    <div class="item card border-0">
+                        <div class="card-body text-center py-4">
+                            <h4 class="card-title">No assignments yet</h4>
+                            <p class="lead card-subtitle">
+                                Add an assignment to see it appear in your timeline.
+                            </p>
+                            <div class="d-grid gap-2">
+                                <div class="btn-group-vertical py-4">
+                                    <a href="{{ url_for('assignments') }}" class="btn btn-primary">
+                                        Go to Assignments
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     {% endif %}
 
                 </div>

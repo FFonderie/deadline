@@ -2,7 +2,7 @@
 Routes and views for the flask application.
 """
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from flask import render_template, redirect, url_for, flash, request
 from flask import current_app as deadline_app
@@ -22,8 +22,8 @@ def home():
     """renders the home page"""
     return render_template(
         'index.html',
-        title='Deadline',
-        year=datetime.now().year,
+        title = 'Deadline',
+        now = datetime.now(),
     )
 
 
@@ -39,14 +39,17 @@ def timeline():
         .order_by(Assignment.due_date)
         .all()
     )
+
     return render_template(
         'timeline.html',
         title='Timeline',
         assignments=assignments,
+        now=datetime.now(),
     )
 
 
 @deadline_app.route('/classes')
+@login_required
 def classes():
     """renders a classes page"""
     return render_template(
@@ -56,11 +59,22 @@ def classes():
 
 
 @deadline_app.route('/deadlines')
+@login_required
 def deadlines():
+
+    assignments = (
+        Assignment.query
+        .filter_by(user_id=current_user.id)
+        .order_by(Assignment.due_date)
+        .all()
+    )
+
     """renders a deadlines page"""
     return render_template(
         'deadlines.html',
         title='DeadLines',
+        assignments=assignments,
+        now=datetime.now(),
     )
 
 

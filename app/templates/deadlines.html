@@ -14,22 +14,44 @@
 <section id="timeLineList" class="bg-light">
     <div class="container-lg">
         <div class="text-center">
-            <h2>Your DeadLines</h2>
+            <h2>{{ current_user.username }}'s DeadLines</h2>
             <p class="lead">things that you should consider about these assignments (time needed or difficulty)</p>
         </div>
         <ul class="list-group">
-            <li class="list-group-item">Assignment</li>
-            <li class="list-group-item">Assignment</li>
-            <li class="list-group-item">Assignment</li>
-            <li class="list-group-item">Assignment</li>
-            <li class="list-group-item">Assignment</li>
+            <li class="list-group-item text-center">
+                <div class="row">
+                    <div class="col">
+                        <p class="lead">Assignment</p>
+                    </div>
+                    <div class="col">
+                        <p class="lead">Description</p>
+                    </div>
+                    <div class="col">
+                        <p class="lead">Due Date</p>
+                    </div>
+                </div>
+            </li>
+            {% if assignments %}
+                {% for assignment in assignments %}
+                    <li class="list-group-item text-center">
+                        <div class="row">
+                            <div class="col">
+                                {{ assignment.title }}
+                            </div>
+                            <div class="col">
+                                {{ assignment.description }}
+                            </div>
+                            <div class="col">
+                                {{ assignment.due_date.strftime('%m/%d/%Y at %I:%M%p') }}
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            {% else %}
+                    <li class="list-group-item">No assignments to show!</li>
+            {% endif %}
         </ul>
 
-    </div>
-    <div class="row">
-        <div class="col">
-            
-        </div>
     </div>
 </section>
 

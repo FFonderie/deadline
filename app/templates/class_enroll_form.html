@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Enroll in a Class</h1>
+    <p class="text-muted">
+        Enroll in an existing class. Get a code from your teacher.
+    </p>
+
+    <form method="post">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            {{ form.classCode.label(class="form-label") }}
+            {{ form.classCode(class="form-control") }}
+            {% for error in form.classCode.errors %}
+                <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            {{ form.submit.label.text or "Enroll in class" }}
+        </button>
+        <a href="{{ url_for('classes') }}" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>
+{% endblock %}

@@ -26,6 +26,7 @@ from app.forms import (
     AssignmentForm,
     ClassForm,
     SubmissionForm,
+    EnrollClassForm,
 )
 from app.models import User, Assignment, Class, Submission
 from app import db
@@ -140,6 +141,33 @@ def new_class():
         return redirect(url_for('classes'))
 
     return render_template('class_form.html', form=form)
+
+
+@deadline_app.route('/classes/enroll', methods=['GET', 'POST'])
+@login_required
+def enroll_in_class():
+    """Enroll in an existing class"""
+    form = EnrollClassForm()
+    if form.validate_on_submit():
+
+        """check if the class code exists in the database at all"""
+        if Class.query.filter_by(id=form.classCode.data).first() is None:
+            flash('Invalid Class Code')
+            return redirect(url_for('enroll_in_class'))
+        """check if user is already a member of this class"""
+
+        clazz = Class.query.get_or_404(form.classCode.data)
+        if current_user == clazz.owner or clazz.members.filter_by(id=current_user.id).first():
+            flash('Already Enrolled')
+            return redirect(url_for('enroll_in_class'))
+        
+        clazz.members.append(current_user)
+        db.session.commit()
+        flash('Enrolled in Class!')
+        return redirect(url_for('classes'))
+
+    return render_template('class_enroll_form.html', form=form, title="Classes")
+
 
 
 @deadline_app.route('/classes/<int:class_id>')

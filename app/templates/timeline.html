@@ -5,7 +5,7 @@
 <!--this is the main content-->
 <div class="container">
         <h1>TimeLine</h1>
-        <p>
+        <p class="lead">
             Shows a timeline of things that are due in order of immediacy
         </p>
 </div>
@@ -41,6 +41,9 @@
                         <div class="card-body text-center py-4">
                             <h4 class="card-title">{{ assignment.title }}</h4>
                             <p class="lead card-subtitle">
+                                {{ assignment.clazz.name }}
+                            </p>
+                            <p class="lead card-subtitle">
                                 Due {{ assignment.due_date.strftime('%m/%d/%Y at %I:%M%p') }}
                             </p>
                             <p class="lead card-subtitle">
@@ -48,8 +51,8 @@
                             </p>
                             <div class="d-grid gap-2">
                                 <div class="btn-group-vertical py-4">
-                                    <a href="#" class="btn btn-danger">Go to Class</a>
-                                    <a href="#" class="btn btn-danger">Go to Assignment</a>
+                                    <a href="{{ url_for('class_detail', class_id=assignment.clazz.id) }}" class="btn btn-danger">Go to Class</a>
+                                    <a href="{{ url_for('submit_assignment', assignment_id=assignment.id) }}" class="btn btn-danger">Go to Assignment</a>
                                 </div>
                             </div>
                         </div>
@@ -63,6 +66,9 @@
                         <div class="card-body text-center py-4">
                             <h4 class="card-title">{{ assignment.title }}</h4>
                             <p class="lead card-subtitle">
+                                {{ assignment.clazz.name }}
+                            </p>
+                            <p class="lead card-subtitle">
                                 Due {{ assignment.due_date.strftime('%m/%d/%Y at %I:%M%p') }}
                             </p>
                             <p class="lead card-subtitle">
@@ -70,8 +76,8 @@
                             </p>
                             <div class="d-grid gap-2">
                                 <div class="btn-group-vertical py-4">
-                                    <a href="#" class="btn btn-warning">Go to Class</a>
-                                    <a href="#" class="btn btn-warning">Go to Assignment</a>
+                                    <a href="{{ url_for('class_detail', class_id=assignment.clazz.id) }}" class="btn btn-warning">Go to Class</a>
+                                    <a href="{{ url_for('submit_assignment', assignment_id=assignment.id) }}" class="btn btn-warning">Go to Assignment</a>
                                 </div>
                             </div>
                         </div>
@@ -82,6 +88,9 @@
                         <div class="card-body text-center py-4">
                             <h4 class="card-title">{{ assignment.title }}</h4>
                             <p class="lead card-subtitle">
+                                {{ assignment.clazz.name }}
+                            </p>
+                            <p class="lead card-subtitle">
                                 Due {{ assignment.due_date.strftime('%m/%d/%Y at %I:%M%p') }}
                             </p>
                             <p class="lead card-subtitle">
@@ -89,8 +98,8 @@
                             </p>
                             <div class="d-grid gap-2">
                                 <div class="btn-group-vertical py-4">
-                                    <a href="#" class="btn btn-primary">Go to Class</a>
-                                    <a href="#" class="btn btn-primary">Go to Assignment</a>
+                                    <a href="{{ url_for('class_detail', class_id=assignment.clazz.id) }}" class="btn btn-primary">Go to Class</a>
+                                    <a href="{{ url_for('submit_assignment', assignment_id=assignment.id) }}" class="btn btn-primary">Go to Assignment</a>
                                 </div>
                             </div>
                         </div>

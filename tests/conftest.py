@@ -2,7 +2,6 @@ import pytest
 from app import create_app, db
 from app.models import User
 
-# Create ONE app instance for the whole test session
 flask_app = create_app()
 flask_app.config.update(
     TESTING=True,

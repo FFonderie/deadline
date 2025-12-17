@@ -5,7 +5,6 @@ from datetime import datetime, timedelta, timezone
 import pytest
 from flask import Flask
 
-# Make sure we can import the app files
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
@@ -13,8 +12,6 @@ if PROJECT_ROOT not in sys.path:
 from app import db
 from app.models import User, Assignment
 
-
-# This sets up a tiny test version of the app and an empty database
 @pytest.fixture
 def app():
     app = Flask(__name__)

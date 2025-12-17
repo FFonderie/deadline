@@ -4,7 +4,7 @@
 
 <div class="container">
     <h1>Home Page</h1>
-    <p>
+    <p class="lead">
         The home page
     </p>
 </div>
@@ -15,9 +15,8 @@
             {% if current_user.is_authenticated %}
                 <h1>Hi, {{ current_user.username }}</h1>
                 <p class="lead">What would you like to do?</p>
-                <div class="btn-group-vertical">
+                <div class="btn-group-vertical m-4">
                     <a href="/timeline" class="btn btn-primary">See what's due and when</a>
-                    <a href="/deadlines" class="btn btn-primary">Plan DeadLines</a>
                     <a href="/classes" class="btn btn-primary">Manage Classes</a>
                     <a href="/assignments" class="btn btn-primary">Manage Assignments</a>
 
@@ -26,8 +25,8 @@
                 <h1>Welcome to DeadLine!</h1>
                 <p class="lead">To get started, please sign in or register</p>
                 <div class="container-lg justify-content-center">
-                    <a href="/login" class="btn btn-primary">Sign In</a>
-                    <a href="/register" class="btn btn-primary">Register</a>
+                    <a href="/login" class="btn btn-primary m-4">Sign In</a>
+                    <a href="/register" class="btn btn-primary m-4">Register</a>
                 </div>
             {% endif %}
 

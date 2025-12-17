@@ -6,6 +6,7 @@ from wtforms import (
     SubmitField,
     TextAreaField,
     DateTimeField,
+    IntegerField,
 )
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from app.models import User
@@ -42,3 +43,16 @@ class AssignmentForm(FlaskForm):
     description = TextAreaField('Description')
     due_date = DateTimeField('Due Date (YYYY-MM-DD HH:MM)', format='%Y-%m-%d %H:%M', validators=[DataRequired()])
     submit = SubmitField('Save')
+
+class ClassForm(FlaskForm):
+    name = StringField('Class name', validators=[DataRequired()])
+    description = TextAreaField('Description')
+    submit = SubmitField('Save')
+
+class SubmissionForm(FlaskForm):
+    content = TextAreaField('Your work', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+class EnrollClassForm(FlaskForm):
+    classCode = IntegerField('Class Code', validators=[DataRequired()])
+    submit = SubmitField('Enroll')

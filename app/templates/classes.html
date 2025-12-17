@@ -4,18 +4,9 @@
 
 <div class="container">
     <h1>Classes</h1>
-    <p>
+    <p class="lead">
         Shows a grid of classes as well as the soonest
-        thing due for that class. The last class in the
-        grid will be a placeholder that lets you add or
-        remove another class
-    </p>
-    <p>
-        If you click a class, it will open that class
-        and show the assignments for it. If you are a
-        teacher who has a class, inside you should be
-        able to see the number of students who have
-        looked at, started, or completed an assignment.
+        thing due for that class.
     </p>
 </div>
 
@@ -28,22 +19,123 @@
         </div>
 
         <div class="row my-5 align-items-center justify-content-center">
-            {% for i in range(10) %}
-                <!--card i-->
-                <div class="col-12 col-md-6 col-lg-4 col-xl-3 my-3">
-                    <div class="card border-0">
-                        <div class="card-body text-center py-4">
-                            <h4 class="card-title">Class Name</h4>
-                            <div class="d-grid gap-2">
-                                <div class="btn-group-vertical">
-                                    <a href="#" class="btn btn-primary">Go to Class</a>
-                                    <a href="#" class="btn btn-primary">Next Due Assignment</a>
-                                </div>
+
+            {# Classes you own (teacher) #}
+            {% for clazz in owned_classes %}
+            <div class="col-12 col-md-6 col-lg-4 col-xl-3 my-3">
+                <div class="card border-0">
+                    <div class="card-header text-center text-muted">
+                        Class You Own
+                    </div>
+                    <div class="card-body text-center py-4">
+                        <h4 class="card-title">{{ clazz.name }}</h4>
+                        <p class="card-text text-muted">
+                            {{ clazz.description or 'No description' }}
+                        </p>
+
+                        {# simple inline lookup of soonest assignment #}
+                        {% set upcoming = clazz.assignments
+                        | sort(attribute='due_date')
+                        | first %}
+                        {% if upcoming %}
+                        <p class="small">
+                            Next due: {{ upcoming.title }}<br>
+                            <span class="text-muted">{{ upcoming.due_date }}</span>
+                        </p>
+                        {% else %}
+                        <p class="small text-muted">No assignments yet</p>
+                        {% endif %}
+
+                        <div class="d-grid gap-2">
+                            <div class="btn-group-vertical">
+                                <a href="{{ url_for('class_detail', class_id=clazz.id) }}"
+                                   class="btn btn-primary">Go to Class</a>
+                                {% if upcoming %}
+                                <a href="{{ url_for('submit_assignment', assignment_id=upcoming.id) }}"
+                                   class="btn btn-primary">Next Due Assignment</a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
             {% endfor %}
+
+            {# Classes you are enrolled in (student), but don't own #}
+            {% for clazz in enrolled_classes %}
+            {% if clazz.owner_id != current_user.id %}
+            <div class="col-12 col-md-6 col-lg-4 col-xl-3 my-3">
+                <div class="card border-0">
+                    <div class="card-body text-center py-4">
+                        <h4 class="card-title">{{ clazz.name }}</h4>
+                        <p class="card-text text-muted">
+                            {{ clazz.description or 'No description' }}
+                        </p>
+
+                        {% set upcoming = clazz.assignments
+                        | sort(attribute='due_date')
+                        | first %}
+                        {% if upcoming %}
+                        <p class="small">
+                            Next due: {{ upcoming.title }}<br>
+                            <span class="text-muted">{{ upcoming.due_date }}</span>
+                        </p>
+                        {% else %}
+                        <p class="small text-muted">No assignments yet</p>
+                        {% endif %}
+
+                        <div class="d-grid gap-2">
+                            <div class="btn-group-vertical">
+                                <a href="{{ url_for('class_detail', class_id=clazz.id) }}"
+                                   class="btn btn-primary">Go to Class</a>
+                                {% if upcoming %}
+                                <a href="{{ url_for('submit_assignment', assignment_id=upcoming.id) }}"
+                                   class="btn btn-primary">Next Due Assignment</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+
+
+            {# “Enroll in Class” placeholder card #}
+            <div class="col-12 col-md-6 col-lg-4 col-xl-3 my-3">
+                <div class="card border-0">
+                    <div class="card-body text-center py-4">
+                        <h4 class="card-title">Enroll in a Class</h4>
+                        <p class="card-text text-muted">
+                            Join Someone Else's existing class with a class number
+                        </p>
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('enroll_in_class') }}" class="btn btn-outline-primary">
+                                + Join Class
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            {# “Create class” placeholder card #}
+            <div class="col-12 col-md-6 col-lg-4 col-xl-3 my-3">
+                <div class="card border-0">
+                    <div class="card-body text-center py-4">
+                        <h4 class="card-title">Create a Class</h4>
+                        <p class="card-text text-muted">
+                            Create a new class you can add assignments to.
+                        </p>
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('new_class') }}" class="btn btn-outline-primary">
+                                + New Class
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
 
         </div>

@@ -28,16 +28,38 @@
         </div>
 
         <div class="row my-5 align-items-center justify-content-center">
-            {% for i in range(10) %}
-                <!--card i-->
+
+            {# Classes you own (teacher) #}
+            {% for clazz in owned_classes %}
                 <div class="col-12 col-md-6 col-lg-4 col-xl-3 my-3">
                     <div class="card border-0">
                         <div class="card-body text-center py-4">
-                            <h4 class="card-title">Class Name</h4>
+                            <h4 class="card-title">{{ clazz.name }}</h4>
+                            <p class="card-text text-muted">
+                                {{ clazz.description or 'No description' }}
+                            </p>
+
+                            {# simple inline lookup of soonest assignment #}
+                            {% set upcoming = clazz.assignments
+                                | sort(attribute='due_date')
+                                | first %}
+                            {% if upcoming %}
+                                <p class="small">
+                                    Next due: {{ upcoming.title }}<br>
+                                    <span class="text-muted">{{ upcoming.due_date }}</span>
+                                </p>
+                            {% else %}
+                                <p class="small text-muted">No assignments yet</p>
+                            {% endif %}
+
                             <div class="d-grid gap-2">
                                 <div class="btn-group-vertical">
-                                    <a href="#" class="btn btn-primary">Go to Class</a>
-                                    <a href="#" class="btn btn-primary">Next Due Assignment</a>
+                                    <a href="{{ url_for('class_detail', class_id=clazz.id) }}"
+                                       class="btn btn-primary">Go to Class</a>
+                                    {% if upcoming %}
+                                        <a href="{{ url_for('submit_assignment', assignment_id=upcoming.id) }}"
+                                           class="btn btn-primary">Next Due Assignment</a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -45,6 +67,61 @@
                 </div>
             {% endfor %}
 
+            {# Classes you are enrolled in (student), but don't own #}
+            {% for clazz in enrolled_classes %}
+                {% if clazz.owner_id != current_user.id %}
+                    <div class="col-12 col-md-6 col-lg-4 col-xl-3 my-3">
+                        <div class="card border-0">
+                            <div class="card-body text-center py-4">
+                                <h4 class="card-title">{{ clazz.name }}</h4>
+                                <p class="card-text text-muted">
+                                    {{ clazz.description or 'No description' }}
+                                </p>
+
+                                {% set upcoming = clazz.assignments
+                                    | sort(attribute='due_date')
+                                    | first %}
+                                {% if upcoming %}
+                                    <p class="small">
+                                        Next due: {{ upcoming.title }}<br>
+                                        <span class="text-muted">{{ upcoming.due_date }}</span>
+                                    </p>
+                                {% else %}
+                                    <p class="small text-muted">No assignments yet</p>
+                                {% endif %}
+
+                                <div class="d-grid gap-2">
+                                    <div class="btn-group-vertical">
+                                        <a href="{{ url_for('class_detail', class_id=clazz.id) }}"
+                                           class="btn btn-primary">Go to Class</a>
+                                        {% if upcoming %}
+                                            <a href="{{ url_for('submit_assignment', assignment_id=upcoming.id) }}"
+                                               class="btn btn-primary">Next Due Assignment</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            {# “Add class” placeholder card #}
+            <div class="col-12 col-md-6 col-lg-4 col-xl-3 my-3">
+                <div class="card border-0">
+                    <div class="card-body text-center py-4">
+                        <h4 class="card-title">Add a Class</h4>
+                        <p class="card-text text-muted">
+                            Create a new class you can add assignments to.
+                        </p>
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('new_class') }}" class="btn btn-outline-primary">
+                                + New Class
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
     </div>

@@ -279,3 +279,42 @@ def test_non_urgent_assignments_excluded_from_urgent_query(app, session):
     )
 
     assert urgent_results == []
+
+def test_assignment_description_is_saved(app, session):
+    user = User(username="maya", email="maya@example.com")
+    user.set_password("pw")
+    session.add(user)
+    session.commit()
+
+    a = Assignment(
+        title="Desc Test",
+        description="This is a description",
+        due_date=datetime.utcnow() + timedelta(days=2),
+        user=user,
+    )
+    session.add(a)
+    session.commit()
+
+    saved = Assignment.query.filter_by(title="Desc Test").first()
+    assert saved is not None
+    assert saved.description == "This is a description"
+
+
+def test_can_query_assignments_by_title(app, session):
+    user = User(username="noah", email="noah@example.com")
+    user.set_password("pw")
+    session.add(user)
+    session.commit()
+
+    a = Assignment(
+        title="Query Me",
+        description="Find by title",
+        due_date=datetime.utcnow() + timedelta(days=3),
+        user=user,
+    )
+    session.add(a)
+    session.commit()
+
+    found = Assignment.query.filter_by(title="Query Me").first()
+    assert found is not None
+    assert found.user_id == user.id

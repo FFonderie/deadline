@@ -13,12 +13,17 @@ from flask import (
     abort,
 )
 from flask import current_app as deadline_app
+<<<<<<< HEAD
 from flask_login import (
     login_user,
     logout_user,
     login_required,
     current_user,
 )
+=======
+
+from flask_login import login_user, logout_user, login_required, current_user
+>>>>>>> m2-integration-tests
 
 from app.forms import (
     LoginForm,

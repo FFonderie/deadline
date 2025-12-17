@@ -12,9 +12,6 @@ if PROJECT_ROOT not in sys.path:
 
 from app import db
 from app.models import User, Assignment
-
-
-# This sets up a tiny test version of the app and an empty database
 @pytest.fixture
 def app():
     app = Flask(__name__)

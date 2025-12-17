@@ -3,98 +3,61 @@
 {% block content %}
 
 <div class="container">
-    <h1>Asignments</h1>
-    <p>
-        Should only be accessible in the context of a class
-    </p>
-    <p>
-        If the user is a student, they should see all assignments for this class.
-        If the user is a teacher, they should see all of their assignments for this class.
+    <h1>Your Assignments</h1>
+    <p class="lead text-muted">
+        These are assignments from classes you own or are enrolled in.
+        To create a new assignment, go to a class and use the “New assignment” button there.
     </p>
 </div>
-<section id="assignmentsList" class="bg-light">
-    <div class="container-lg">
-        <div class="text-center">
-            <h2>{{ current_user.username }}'s Assignments</h2>
-            <p class="lead">Assignments you have made or have due</p>
-        </div>
 
-        <ul class="list-group">
-            <li class="list-group-item text-center">
-                <div class="row">
-                    <div class="col">
-                        <p class="lead">Assignment</p>
-                    </div>
-                    <div class="col">
-                        <p class="lead">Description</p>
-                    </div>
-                    <div class="col">
-                        <p class="lead">Due Date</p>
-                    </div>
-                </div>
-            </li>
+<section id="assignments" class="bg-light mt-5">
+    <div class="container-lg">
+        <div class="row my-4">
             {% if assignments %}
-                {% for assignment in assignments %}
-                    <li class="list-group-item text-center">
-                        <div class="row">
-                            <div class="col">
-                                {{ assignment.title }}
-                            </div>
-                            <div class="col">
-                                {{ assignment.description }}
-                            </div>
-                            <div class="col">
-                                {{ assignment.due_date.strftime('%m/%d/%Y at %I:%M%p') }}
+                {% for a in assignments %}
+                    <div class="col-12 col-md-6 col-lg-4 my-3">
+                        <div class="card border-0 h-100">
+                            <div class="card-body d-flex flex-column">
+                                <h4 class="card-title">{{ a.title }}</h4>
+                                <p class="card-text text-muted">
+                                    Class:
+                                    {% if a.clazz %}
+                                        {{ a.clazz.name }}
+                                    {% else %}
+                                        (no class)
+                                    {% endif %}
+                                </p>
+                                {% if a.description %}
+                                    <p class="card-text">
+                                        {{ a.description }}
+                                    </p>
+                                {% endif %}
+                                <p class="card-text small text-muted mt-auto">
+                                    Due: {{ a.due_date }}
+                                </p>
+                                <div class="d-grid gap-2 mt-2">
+                                    {% if a.clazz %}
+                                        <a href="{{ url_for('class_detail', class_id=a.clazz.id) }}"
+                                           class="btn btn-outline-secondary">
+                                            Go to Class
+                                        </a>
+                                    {% endif %}
+                                    <a href="{{ url_for('submit_assignment', assignment_id=a.id) }}"
+                                       class="btn btn-primary">
+                                        Submit / View Your Work
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    </li>
+                    </div>
                 {% endfor %}
             {% else %}
-                    <li class="list-group-item">No assignments to show!</li>
+                <div class="col-12">
+                    <p class="text-muted">
+                        You don't have any assignments yet. Join a class or create one and add assignments there.
+                    </p>
+                </div>
             {% endif %}
-        </ul>
-    </div>
-</section>
-
-<section id="createAssignment">
-    <div class="container-lg">
-        <div class="text-center">
-            <h2>Create Assignment</h2>
-            <p class="lead">makes an assignments for this class</p>
-        </div>
-
-        <div class="row justify-content-center my-5">
-            <div class="col-lg-6">
-                <form method="post">
-                    {{ form.hidden_tag() }}
-
-                    <p class="lead">
-                        {{ form.title.label }}<br>
-                        {{ form.title(size=32) }}
-                        {% for error in form.title.errors %}
-                        <span class="error">{{ error }}</span>
-                        {% endfor %}
-                    </p>
-
-                    <p class="lead">
-                        {{ form.description.label }}<br>
-                        {{ form.description(size=32) }}
-                        {% for error in form.description.errors %}
-                        <span class="error">{{ error }}</span>
-                        {% endfor %}
-                    </p>
-
-                    <p class="lead">
-                        {{ form.due_date.label }}<br>
-                        {{ form.due_date(size=32) }}
-                        {% for error in form.due_date.errors %}
-                        <span class="error">{{ error }}</span>
-                        {% endfor %}
-                    </p>
-
-                    <p class="lead">{{ form.submit() }}</p>
-                </form>
-            </div>
         </div>
     </div>
 </section>

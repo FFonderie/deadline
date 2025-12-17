@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Submissions for {{ assignment.title }}</h1>
+    <p class="text-muted">
+        Class: {{ assignment.clazz.name }}
+    </p>
+
+    {% if submissions %}
+        <ul class="list-group">
+            {% for s in submissions %}
+                <li class="list-group-item">
+                    <strong>{{ s.student.username }}</strong>
+                    <span class="text-muted small">
+                        – submitted at {{ s.submitted_at }}
+                    </span>
+                    <p class="mt-2 mb-0">{{ s.content }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-muted">No submissions yet.</p>
+    {% endif %}
+
+    <a href="{{ url_for('class_detail', class_id=assignment.clazz.id) }}"
+       class="btn btn-secondary mt-3">Back to class</a>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>{{ clazz.name }}</h1>
+    {% if clazz.description %}
+        <p class="text-muted">{{ clazz.description }}</p>
+    {% endif %}
+
+    <h2 class="mt-4">Assignments</h2>
+    {% if assignments %}
+        <ul class="list-group">
+            {% for a in assignments %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ a.title }}</strong><br>
+                        <small class="text-muted">
+                            Due: {{ a.due_date }}
+                        </small>
+                    </div>
+                    <div class="btn-group">
+                        <a href="{{ url_for('submit_assignment', assignment_id=a.id) }}"
+                           class="btn btn-sm btn-primary">
+                            Submit / View
+                        </a>
+                        {% if current_user.id == clazz.owner_id %}
+                            <a href="{{ url_for('view_submissions', assignment_id=a.id) }}"
+                               class="btn btn-sm btn-outline-secondary">
+                                Submissions
+                            </a>
+                        {% endif %}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-muted mt-2">No assignments yet.</p>
+    {% endif %}
+
+    {% if current_user.id == clazz.owner_id %}
+        <a href="{{ url_for('new_assignment', class_id=clazz.id) }}"
+           class="btn btn-primary mt-3">New assignment</a>
+    {% endif %}
+
+    <a href="{{ url_for('classes') }}" class="btn btn-secondary mt-3 ms-2">Back to classes</a>
+</div>
+{% endblock %}

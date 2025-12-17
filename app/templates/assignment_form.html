@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>New Assignment for {{ clazz.name }}</h1>
+
+    <form method="post">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            {{ form.title.label(class="form-label") }}
+            {{ form.title(class="form-control") }}
+            {% for error in form.title.errors %}
+                <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.description.label(class="form-label") }}
+            {{ form.description(class="form-control", rows=4) }}
+            {% for error in form.description.errors %}
+                <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.due_date.label(class="form-label") }}
+            {{ form.due_date(class="form-control") }}
+            <div class="form-text">Use format: YYYY-MM-DD HH:MM:SS if it’s a DateTimeField.</div>
+            {% for error in form.due_date.errors %}
+                <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            {{ form.submit.label.text or "Create assignment" }}
+        </button>
+        <a href="{{ url_for('class_detail', class_id=clazz.id) }}"
+           class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>
+{% endblock %}

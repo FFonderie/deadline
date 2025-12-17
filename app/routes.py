@@ -4,26 +4,9 @@ Routes and views for the flask application.
 
 from datetime import datetime, timedelta
 
-from flask import (
-    render_template,
-    redirect,
-    url_for,
-    flash,
-    request,
-    abort,
-)
 from flask import current_app as deadline_app
-<<<<<<< HEAD
-from flask_login import (
-    login_user,
-    logout_user,
-    login_required,
-    current_user,
-)
-=======
-
+from flask import render_template, redirect, url_for, flash, request, abort
 from flask_login import login_user, logout_user, login_required, current_user
->>>>>>> m2-integration-tests
 
 from app.forms import (
     LoginForm,

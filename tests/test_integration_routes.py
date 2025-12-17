@@ -12,8 +12,7 @@ def login(client, username="student1", password="Password123!"):
 
 def test_routes_exist_in_app(client):
     """
-    Sanity check: make sure the main routes exist
-    in the SAME app instance the test client is using.
+   Sanity check: confirm that the test client is connected to an app instance that contains the main routes.
     """
     rules = [rule.rule for rule in client.application.url_map.iter_rules()]
 
@@ -30,8 +29,8 @@ def test_home_page_renders(client):
 
 def test_protected_route_redirects_when_logged_out(client):
     """
-    Edge case: accessing a login_required route while logged out
-    should redirect to /login
+    Edge case: if a user is not logged in and tries to visit a protected route,
+    they should be sent to the login page
     """
     res = client.get("/timeline", follow_redirects=False)
     assert res.status_code in (302, 303)

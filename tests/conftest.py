@@ -1,20 +1,25 @@
 import pytest
+import importlib
 from app import create_app, db
-from app.models import User
-
-flask_app = create_app()
-flask_app.config.update(
-    TESTING=True,
-    WTF_CSRF_ENABLED=False,
-    SQLALCHEMY_DATABASE_URI="sqlite:///:memory:",
-    SECRET_KEY="test-secret",
-)
 
 @pytest.fixture
 def app():
-    with flask_app.app_context():
+    _app = create_app()
+    _app.config.update({
+        "TESTING": True,
+        "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
+        "WTF_CSRF_ENABLED": False,
+        "SERVER_NAME": "localhost"
+    })
+
+    with _app.app_context():
+        import app.routes
+        # Only reload if the 'home' route isn't registered yet
+        if 'home' not in _app.view_functions:
+            importlib.reload(app.routes)
+        
         db.create_all()
-        yield flask_app
+        yield _app
         db.session.remove()
         db.drop_all()
 
@@ -23,12 +28,5 @@ def client(app):
     return app.test_client()
 
 @pytest.fixture
-def user(app):
-    with app.app_context():
-        u = User(username="student1", email="student1@test.com")
-        u.set_password("Password123!")
-        db.session.add(u)
-        db.session.commit()
-        return u
-
-
+def session(app):
+    return db.session

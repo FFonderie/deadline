@@ -15,6 +15,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(64), index=True, unique=True, nullable=False)
     email = db.Column(db.String(128), index=True, unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
+    notifications_enabled = db.Column(db.Boolean, default=True)
 
     def set_password(self, password):
             self.password_hash = generate_password_hash(
@@ -55,7 +56,7 @@ class Assignment(db.Model):
     description = db.Column(db.Text)
     due_date = db.Column(db.DateTime, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
+    reminder_hours = db.Column(db.Integer, default=24)
   # who created the assignment
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     creator = db.relationship('User', backref='created_assignments')

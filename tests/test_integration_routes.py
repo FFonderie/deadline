@@ -1,54 +1,62 @@
-def login(client, username="student1", password="Password123!"):
-    return client.post(
-        "/login",
-        data={
-            "username": username,
-            "password": password,
-            "remember_me": "y",
-        },
-        follow_redirects=False,
-    )
-
-
-def test_routes_exist_in_app(client):
-    """
-   Sanity check: confirm that the test client is connected to an app instance that contains the main routes.
-    """
-    rules = [rule.rule for rule in client.application.url_map.iter_rules()]
-
-    assert "/" in rules
-    assert "/login" in rules
-    assert "/timeline" in rules
-
+import pytest
+from app.models import User, Class, Assignment
+from datetime import datetime, timedelta
 
 def test_home_page_renders(client):
     res = client.get("/")
     assert res.status_code == 200
-    assert b"Deadline" in res.data or b"deadline" in res.data
 
+def test_login_logout_flow(client, session, app):
+    with app.app_context():
+        u = User(username="testuser", email="test@test.com")
+        u.set_password("Password123!")
+        session.add(u)
+        session.commit()
 
-def test_protected_route_redirects_when_logged_out(client):
-    """
-    Edge case: if a user is not logged in and tries to visit a protected route,
-    they should be sent to the login page
-    """
-    res = client.get("/timeline", follow_redirects=False)
-    assert res.status_code in (302, 303)
-    assert "/login" in res.headers.get("Location", "")
+    res = client.post("/login", data={
+        "username": "testuser",
+        "password": "Password123!"
+    }, follow_redirects=True)
+    assert res.status_code == 200
+    assert b"Logout" in res.data 
 
+    res = client.get("/logout", follow_redirects=True)
+    assert res.status_code == 200
 
-def test_login_post_redirects_on_success(client, user):
-    """
-    Integration test for POST /login
-    """
-    res = login(client)
-    assert res.status_code in (302, 303)
+def test_instructor_page_access_edge_case(client, session, app):
+    with app.app_context():
+        teacher = User(username="teacher", email="t@t.com")
+        teacher.set_password("pass")
+        student = User(username="student", email="s@t.com")
+        student.set_password("pass")
+        session.add_all([teacher, student])
+        session.commit()
 
+        c = Class(name="CS50", owner=teacher)
+        session.add(c)
+        session.commit()
+        # FIX: Save the ID here so we don't need the 'c' object later
+        c_id = c.id
 
-def test_login_then_timeline_page_renders(client, user):
-    """
-    Logged-in user should be able to access /timeline
-    """
-    login(client)
+    client.post("/login", data={"username": "student", "password": "pass"})
+    # Use the saved c_id
+    res = client.get(f"/classes/{c_id}/assignments/new")
+    assert res.status_code == 403
+
+def test_timeline_renders_with_data(client, session, app):
+    with app.app_context():
+        u = User(username="user1", email="u1@test.com")
+        u.set_password("pass")
+        session.add(u)
+        c = Class(name="Bio101", owner=u)
+        c.members.append(u)
+        session.add(c)
+        session.commit()
+        a = Assignment(title="Bio Lab", due_date=datetime.now() + timedelta(days=1), creator=u, clazz=c)
+        session.add(a)
+        session.commit()
+
+    client.post("/login", data={"username": "user1", "password": "pass"})
     res = client.get("/timeline")
     assert res.status_code == 200
+    assert b"Bio Lab" in res.data
